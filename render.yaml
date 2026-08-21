@@ -22,3 +22,5 @@ services:
         sync: false
       - key: GROQ_API_KEY
         sync: false
+      - key: EMBEDDING_MODEL
+        value: "sentence-transformers/all-MiniLM-L6-v2"

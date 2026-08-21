@@ -98,30 +98,9 @@ async def lifespan(app: FastAPI):
     dense_retriever = DenseRetriever(vector_store=vector_store)
     bm25_retriever = BM25Retriever()
     
-    # Load documents into BM25 index
-    logger.info("loading_bm25_from_qdrant")
-    try:
-        scroll_res = vector_store._client.scroll(
-            collection_name=settings.qdrant_collection,
-            limit=settings.dataset_max_samples or 2000,
-            with_payload=True,
-        )
-        points = scroll_res[0]
-        if points:
-            ids = [str(p.id) for p in points]
-            texts = [str(p.payload.get("text", "")) for p in points]
-            bm25_retriever.build_index(ids, texts)
-            
-            # Explicitly free up memory
-            del points
-            del scroll_res
-            del ids
-            del texts
-            import gc
-            gc.collect()
-            
-    except Exception as e:
-        logger.warning("bm25_load_failed", error=str(e))
+    # Removing eager BM25 loading to save startup memory.
+    # BM25 will be lazy-loaded in HybridRetriever on the first search request.
+    logger.info("bm25_lazy_loading_configured")
     
     retriever = HybridRetriever(
         dense_retriever=dense_retriever,

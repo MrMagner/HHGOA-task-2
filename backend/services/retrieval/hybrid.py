@@ -85,6 +85,27 @@ class HybridRetriever(Retriever):
 
         # BM25 retrieval
         bm25_results: list[RetrievalResult] = []
+        if not self._bm25.is_ready():
+            logger.info("lazy_loading_bm25")
+            try:
+                from backend.config.settings import get_settings
+                settings = get_settings()
+                vector_store = self._dense._vector_store
+                scroll_res = vector_store._client.scroll(
+                    collection_name=settings.qdrant_collection,
+                    limit=settings.dataset_max_samples or 2000,
+                    with_payload=True,
+                )
+                points = scroll_res[0]
+                if points:
+                    ids = [str(p.id) for p in points]
+                    texts = [str(p.payload.get("text", "")) for p in points]
+                    self._bm25.build_index(ids, texts)
+                    del points, scroll_res, ids, texts
+                    import gc; gc.collect()
+            except Exception as e:
+                logger.warning("bm25_lazy_load_failed", error=str(e))
+                
         if self._bm25.is_ready():
             try:
                 bm25_results = self._bm25.search(
