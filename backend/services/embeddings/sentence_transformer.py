@@ -41,7 +41,7 @@ class SentenceTransformerEmbeddings(EmbeddingProvider):
                 provider="fastembed"
             )
             from fastembed import TextEmbedding
-            self._model = TextEmbedding(self._model_name)
+            self._model = TextEmbedding(self._model_name, threads=1)
             logger.info(
                 "embedding_model_loaded",
                 model=self._model_name,
