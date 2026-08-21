@@ -10,8 +10,8 @@ export default function Home() {
   const [result, setResult] = useState<RAGResponseData | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   
-  // Replace with your actual backend URL or use relative path if proxied
-  const API_BASE = "http://localhost:8000/api/v1";
+  // Use environment variable for production, fallback to localhost for local development
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
 
   const handleAudioReady = async (blob: Blob) => {
     setIsProcessing(true);
