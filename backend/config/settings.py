@@ -79,7 +79,7 @@ class Settings(BaseSettings):
     llm_timeout: int = 30
 
     # --- Embeddings & Vector Store ---
-    embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     embedding_dimension: int = 384
     embedding_batch_size: int = 64
     embedding_device: str = "cpu"
@@ -163,6 +163,14 @@ class Settings(BaseSettings):
         if upper not in valid:
             raise ValueError(f"log_level must be one of {valid}")
         return upper
+
+    @field_validator("embedding_model")
+    @classmethod
+    def override_heavy_model(cls, v: str) -> str:
+        """Prevent OOM by forcing the lightweight model even if the heavy one is in env vars."""
+        if v == "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2":
+            return "sentence-transformers/all-MiniLM-L6-v2"
+        return v
 
     def is_stt_available(self) -> bool:
         """Check if STT provider has required credentials."""
