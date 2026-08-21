@@ -27,6 +27,7 @@ def setup_middleware(app: FastAPI, cors_origins: list[str]) -> None:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=cors_origins,
+        allow_origin_regex=r"https://hhgoa-task-2.*\.vercel\.app",
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
