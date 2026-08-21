@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter);
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
+  --color-brand-900: #134e4a;
+  --color-brand-950: #042f2e;
+
+  --color-dark-bg: #09090b;
+  --color-dark-surface: #18181b;
+  --color-dark-border: #27272a;
+}
+
+@layer base {
+  :root {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --primary: 173 80% 40%;
+    --primary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    
+    color-scheme: dark;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)];
+  }
+  
+  .glass-card {
+    @apply bg-black/40 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-2xl;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-300 to-brand-500;
+  }
+}
+
+body {
+  background-color: var(--color-dark-bg);
+  color: white;
+  min-height: 100vh;
+  /* Abstract dark mesh gradient background */
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(173, 80%, 40%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(253, 60%, 40%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(173, 80%, 40%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(253, 60%, 40%, 0.1) 0px, transparent 50%);
+  background-attachment: fixed;
+}

@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+*.egg
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+.next/
+out/
+.turbo/
+
+# Data & Cache
+data/
+*.cache
+*.pkl
+*.bin
+embeddings_cache/
+qdrant_data/
+*.snapshot
+
+# Evaluation results (generated)
+backend/evaluation/results/*.json
+backend/evaluation/results/*.csv
+
+# Logs
+*.log
+logs/
+
+# Docker
+.docker/
+
+# Misc
+*.bak
+*.tmp
+.agents/
+*.parquet
+*.mp3
+test-results/
