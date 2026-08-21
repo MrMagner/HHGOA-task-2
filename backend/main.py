@@ -19,7 +19,7 @@ from backend.services.retrieval.vector_store import VectorStore
 from backend.services.retrieval.dense import DenseRetriever
 from backend.services.retrieval.bm25 import BM25Retriever
 from backend.services.retrieval.hybrid import HybridRetriever
-from backend.services.reranking.cross_encoder import CrossEncoderReranker
+# from backend.services.reranking.cross_encoder import CrossEncoderReranker
 from backend.services.generation.groq_provider import GroqProvider
 from backend.services.generation.openai_provider import OpenAIProvider
 from backend.services.generation.demo import DemoLLM
@@ -133,6 +133,7 @@ async def lifespan(app: FastAPI):
     # 6. Reranking
     reranker = None
     if settings.rerank_enabled:
+        from backend.services.reranking.cross_encoder import CrossEncoderReranker
         reranker = CrossEncoderReranker(model_name=settings.rerank_model)
         
     # 7. Pipeline Orchestrator

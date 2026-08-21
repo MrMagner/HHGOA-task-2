@@ -6,8 +6,7 @@ similarity but significantly slower.
 """
 
 from __future__ import annotations
-
-from sentence_transformers import CrossEncoder
+from typing import Any
 
 from backend.services.reranking.base import Reranker
 from backend.services.retrieval.base import RetrievalResult
@@ -25,12 +24,19 @@ class CrossEncoderReranker(Reranker):
 
     def __init__(self, model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2") -> None:
         self._model_name = model_name
-        self._model: CrossEncoder | None = None
+        self._model: Any | None = None
 
-    def _get_model(self) -> CrossEncoder:
+    def _get_model(self) -> Any:
         """Lazy-load the cross-encoder model."""
         if self._model is None:
             logger.info("loading_cross_encoder", model=self._model_name)
+            try:
+                from sentence_transformers import CrossEncoder
+            except ImportError:
+                raise ImportError(
+                    "sentence-transformers is required for CrossEncoderReranker. "
+                    "Install it or disable RERANK_ENABLED."
+                )
             self._model = CrossEncoder(self._model_name)
             logger.info("cross_encoder_loaded", model=self._model_name)
         return self._model
@@ -72,7 +78,9 @@ class CrossEncoderReranker(Reranker):
         for result, score in scored_results[:top_k]:
             reranked.append(
                 RetrievalResult(
-                    id=result.id,
+                    id=result.id if hasattr(result, "id") else getattr(result, "chunk_id", ""),
+                    chunk_id=getattr(result, "chunk_id", ""),
+                    document_id=getattr(result, "document_id", ""),
                     text=result.text,
                     score=float(score),
                     metadata={**result.metadata, "original_score": result.score},
