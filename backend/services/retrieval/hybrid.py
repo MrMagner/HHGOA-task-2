@@ -100,7 +100,7 @@ class HybridRetriever(Retriever):
                 if points:
                     ids = [str(p.id) for p in points]
                     texts = [str(p.payload.get("text", "")) for p in points]
-                    # self._bm25.build_index(ids, texts)
+                    self._bm25.build_index(ids, texts)
                     del points, scroll_res, ids, texts
                     import gc; gc.collect()
             except Exception as e:

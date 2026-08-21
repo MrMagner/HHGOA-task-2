@@ -2,6 +2,15 @@
 
 from __future__ import annotations
 
+import os
+# Aggressively limit C-level thread pools to prevent OOM in containers (e.g. Render Free)
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -93,6 +102,7 @@ async def lifespan(app: FastAPI):
         batch_size=settings.embedding_batch_size,
     )
     # Removing warmup to allow lazy-loading and save startup memory
+    logger.info(f"Embedding model configured: {settings.embedding_model}")
     logger.info("embedding_model_lazy_loaded")
     
     dense_retriever = DenseRetriever(vector_store=vector_store)
