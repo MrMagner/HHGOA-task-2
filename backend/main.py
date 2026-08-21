@@ -92,9 +92,8 @@ async def lifespan(app: FastAPI):
         device=settings.embedding_device,
         batch_size=settings.embedding_batch_size,
     )
-    logger.info("warming_up_embedding_model")
-    embedding_provider.embed_query("warmup")
-
+    # Removing warmup to allow lazy-loading and save startup memory
+    logger.info("embedding_model_lazy_loaded")
     
     dense_retriever = DenseRetriever(vector_store=vector_store)
     bm25_retriever = BM25Retriever()
@@ -112,6 +111,15 @@ async def lifespan(app: FastAPI):
             ids = [str(p.id) for p in points]
             texts = [str(p.payload.get("text", "")) for p in points]
             bm25_retriever.build_index(ids, texts)
+            
+            # Explicitly free up memory
+            del points
+            del scroll_res
+            del ids
+            del texts
+            import gc
+            gc.collect()
+            
     except Exception as e:
         logger.warning("bm25_load_failed", error=str(e))
     

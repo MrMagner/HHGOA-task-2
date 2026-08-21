@@ -74,6 +74,8 @@ def main():
         
     vector_store = VectorStore(
         collection_name=settings.qdrant_collection,
+        url=settings.qdrant_url,
+        api_key=settings.qdrant_api_key,
         local_path=settings.qdrant_local_path,
         embedding_dimension=settings.embedding_dimension,
     )
