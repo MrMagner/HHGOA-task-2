@@ -56,7 +56,7 @@ class Settings(BaseSettings):
     # --- Server ---
     host: str = "0.0.0.0"
     port: int = 8000
-    cors_origins: str = "http://localhost:3000,http://localhost:8000"
+    cors_origins: str = "http://localhost:3000,http://localhost:8000,https://hhgoa-task-2-igj8mayfh-mrmagners-projects.vercel.app,https://hhgoa-task-2.vercel.app"
 
     # --- STT ---
     stt_provider: STTProvider = STTProvider.SARVAM
