@@ -129,7 +129,7 @@ class Settings(BaseSettings):
     dataset_name: str = "ai4bharat/MSMARCO-XI"
     dataset_split: str = "train"
     dataset_language: str = "en"
-    dataset_max_samples: int = 10000
+    dataset_max_samples: int = 1000
     data_dir: str = "./data"
 
     # --- Benchmark ---
@@ -167,10 +167,8 @@ class Settings(BaseSettings):
     @field_validator("embedding_model")
     @classmethod
     def override_heavy_model(cls, v: str) -> str:
-        """Prevent OOM by forcing the lightweight model even if the heavy one is in env vars."""
-        if v == "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2":
-            return "sentence-transformers/all-MiniLM-L6-v2"
-        return v
+        """Prevent OOM by always forcing the lightweight model on Render."""
+        return "sentence-transformers/all-MiniLM-L6-v2"
 
     def is_stt_available(self) -> bool:
         """Check if STT provider has required credentials."""
